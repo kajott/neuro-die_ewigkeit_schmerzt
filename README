@@ -1,0 +1,21 @@
+neuro
+Die Ewigkeit schmerzt
+
+code
+paniq
+
+additional gfx
+tournesol
+
+this demo is coded entirely in python, and the entire source
+code is included. it features a quite complete svg loader,
+and ctypes-based abstractions for sdl and glsl.
+
+the first time running it will take some time because
+it needs to render polygons and outlines from the shapes
+first. all data is cached, so the second time you run it
+it will load quite fast.
+
+gpl licence.
+
+enjoy.
