@@ -14,11 +14,13 @@ from ctypes import 	c_uint, \
 					c_float, \
 					CFUNCTYPE, \
 					c_char_p, \
+					c_void_p, \
 					POINTER, \
 					byref, \
 					c_char, \
 					c_double, \
 					c_short
+import ctypes.util
 import sys
 from array import array
 
@@ -30,21 +32,29 @@ if is_win32():
 	ogl = ctypes.windll.opengl32
 else:
 	import glob
-	ogl = ctypes.cdll.LoadLibrary(glob.glob('/usr/lib/libGL.so*')[0])
+	ogl = ctypes.cdll.LoadLibrary(ctypes.util.find_library("GL"))
 
 _verbose = False
 _gl_ignore_extensions = []
+_get_proc_address = None
 	
 def gl_get_proc(name):
+	global _get_proc_address
 	if is_win32():						
 		class GLFunction(ctypes._CFuncPtr):
 			_flags_ = _ctypes.FUNCFLAG_STDCALL
 			_restype_ = None
-		func = ogl.wglGetProcAddress(name)
+		if not _get_proc_address:
+			_get_proc_address = WINFUNCTYPE(c_void_p, c_char_p)(('wglGetProcAddress', ogl))
+			assert _get_proc_address
+		func = _get_proc_address(name)
 		assert func
 		return GLFunction(func)	
 	else:		
-		func = ogl.glXGetProcAddressARB(name)
+		if not _get_proc_address:
+			_get_proc_address = CFUNCTYPE(c_void_p, c_char_p)(('glXGetProcAddressARB', ogl))
+			assert _get_proc_address
+		func = _get_proc_address(name)
 		assert func
 		return CFUNCTYPE(None)(func)
 

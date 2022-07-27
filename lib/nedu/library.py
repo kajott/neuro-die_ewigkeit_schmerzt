@@ -32,22 +32,12 @@ def load(*names):
 	@rtype: ctypes CDLL handle
 	@rparam: a handle to the loaded library.
 	"""
+	import ctypes, ctypes.util
+	m = None
 	for name in names:
-		import ctypes, os
-		libname = 'lib' + name + '.so'
-		m = None
-		for path in ('/usr/lib','/usr/local/lib'):
-			libpath = os.path.join(path,libname)
-			if os.path.isfile(libpath):
-				m = ctypes.CDLL(libpath)
-				break
-			for filename in reversed(sorted(os.listdir(path))):
-				if filename.startswith(libname):
-					m = ctypes.CDLL(os.path.join(path,filename))
-					break
-			if m:
-				break
-		if m:
+		path = ctypes.util.find_library(name)
+		if path:
+			m = ctypes.CDLL(path)
 			break
 	assert m, "libraries %s not found" % ','.join(["'%s'" % a for a in names])
 	return m

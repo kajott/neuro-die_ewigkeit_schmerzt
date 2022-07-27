@@ -70,7 +70,6 @@ class Grow(Actor):
 		print maxtime
 		for actor in self.grow_actors:
 			m = actor.get_matrix()
-			m.swapaxes(-1,1)
 			import copy
 			newmesh = copy.deepcopy(actor.mesh)
 			newmesh.apply_matrix(m)

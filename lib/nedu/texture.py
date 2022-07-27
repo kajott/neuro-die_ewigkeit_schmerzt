@@ -1,6 +1,6 @@
 from log import log as _log
 
-import os, sys, res, vector, Numeric
+import os, sys, res, vector
 import math
 
 from OpenGL.GLU import gluBuild2DMipmaps
@@ -95,8 +95,7 @@ from GLEXT import glGenFramebuffersEXT, \
 				
 
 
-import Image
-import PngImagePlugin
+from PIL import Image, PngImagePlugin
 
 from math import log
 
@@ -144,11 +143,11 @@ class Texture:
 			image_file = Image.open(path)
 			w,h = image_file.size
 			if transparent:
-				image = image_file.tostring("raw", "RGBA", 0, -1)
+				image = image_file.tobytes("raw", "RGBA", 0, -1)
 				internalformat = GL_RGBA8
 				format = GL_RGBA
 			else:
-				image = image_file.tostring("raw", "RGB", 0, -1)
+				image = image_file.tobytes("raw", "RGB", 0, -1)
 				internalformat = GL_RGB8
 				format = GL_RGB
 			pdtype = GL_UNSIGNED_BYTE			
@@ -286,7 +285,7 @@ class Rendertarget:
 		func()
 
 class Bitmap:
-	_default_matrix_ = Numeric.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+	_default_matrix_ = [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
 	
 	def __init__(self):
 		self.reset_matrix()
@@ -309,7 +308,7 @@ class Bitmap:
 		return Texture(width=size[0],height=size[1],internalformat=GL_RGBA8,format=GL_RGBA,pdtype=GL_UNSIGNED_BYTE,image=self.get_image_raw(size,ofs),clamp=GL_CLAMP)
 
 class Pattern(Bitmap):
-	_default_matrix_ = Numeric.array([[1.0,0.0,0.0],[0.0,-1.0,0.0],[0.0,0.0,1.0]])
+	_default_matrix_ = [[1.0,0.0,0.0],[0.0,-1.0,0.0],[0.0,0.0,1.0]]
 	
 	def __init__(self):
 		Bitmap.__init__(self)
@@ -322,7 +321,7 @@ class Pattern(Bitmap):
 	def get_image_raw(self, size=(64,64), ofs=(0,0)):
 		import res
 		image_file = Image.open(res.find(self.image))
-		source = image_file.resize(size,1).tostring("raw", "RGBA", 0, -1)
+		source = image_file.resize(size,1).tobytes("raw", "RGBA", 0, -1)
 		width,height = size
 		data = [None]*(width*height)
 		for p in range(width*height):

@@ -3,7 +3,6 @@ from log import log
 import GLSL, texture
 from vector import scale
 from OpenGL.GL import *
-import Numeric
 
 
 
@@ -21,7 +20,7 @@ class Material:
 		self.alpha = 1.0
 		self.illumination = 0.0
 		self.blend = True
-		self.texture_matrix = Numeric.array([[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]])
+		self.texture_matrix = [[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]]
 		self.funcs = []
 		
 	def animate_uniform(self, name):

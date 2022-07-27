@@ -82,9 +82,6 @@ class Demo:
 
 	def run(self,scenename="main",**kargs):
 		self.debug = kargs.get('debug',False)
-		if not self.debug:
-			import psyco
-			psyco.profile()
 		self.console = console.Console()
 		self.frame = frame.Frame(demo=self,**kargs)
 		self.player = sound.create_player(**kargs)

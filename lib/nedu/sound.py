@@ -8,27 +8,16 @@ AUDIO_S16 = 0x8010
 
 import os,sys,res,library
 
-libsdl_name = None
-libsdlmixer_name = None
 sdl = None
 sdl_mixer = None
 
 def init():
 	global sdl
 	global sdl_mixer
-	global libsdl_name
-	global libsdlmixer_name
 	
 	if sdl:
 		return
 	
-	if sys.platform == 'win32':
-		libsdl_name = res.find('SDL.dll')
-		libsdlmixer_name = res.find('SDL_mixer.dll')
-	else:
-		libsdl_name = 'libSDL.so'
-		libsdlmixer_name = 'libSDL_mixer.so'
-
 	sdl = library.load('SDL','SDL-1.2')
 	sdl_mixer = library.load('SDL_mixer','SDL_mixer-1.2')
 
@@ -98,7 +87,7 @@ class SoundPlayer(object):
 		sdl_mixer.Mix_OpenAudio(self.samplerate, AUDIO_S16, 2, 4096)
 		log("loading '%s' (%.3f bpm)" % (track,bpm))
 		self.bpm = bpm
-		self.hMusic = c_void_p(sdl_mixer.Mix_LoadMUS(track))
+		self.hMusic = CFUNCTYPE(c_void_p, c_char_p)(('Mix_LoadMUS', sdl_mixer))(track)
 		self.music_pos = 0
 		self.music_pos_time = sdl.SDL_GetTicks()
 		self.cbtype = mixmusic_callback_type(self.mixmusic_callback)
@@ -145,7 +134,7 @@ class SoundPlayer(object):
 		log("starting track")
 		self.music_pos = 0
 		self.music_pos_time = sdl.SDL_GetTicks()
-		sdl_mixer.Mix_PlayMusic(self.hMusic, 0)
+		CFUNCTYPE(c_int, c_void_p, c_int)(('Mix_PlayMusic', sdl_mixer))(self.hMusic, 0)
 		
 	def get_beat_time(self):
 		t = ((self.get_time()/ 60.0)*self.bpm) - self.offset

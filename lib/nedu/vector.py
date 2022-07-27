@@ -17,7 +17,6 @@ you should use Numarray instead.
 """
 
 import math
-import Numeric
 
 def logmod(a,b):
 	if not a:
@@ -221,16 +220,15 @@ def transform_points_2d(points, matrix):
 	return [transform_point_2d(p, matrix) for p in points]
 
 def transform_point_2d((x,y), matrix):
-	((x,),(y,),(z,)) = Numeric.matrixmultiply(matrix,[[x],[y],[1.0]])
-	return x,y
+	r = matrix[0];  nx = x * r[0] + y * r[1] + r[2]
+	r = matrix[1];  ny = x * r[0] + y * r[1] + r[2]
+	return nx, ny
+
+def transform_point_4d(vector, matrix):
+	return tuple(sum(a*b for a,b in zip(vector, row)) for row in matrix)
 
 def transform_point_3d((x,y,z), matrix):
-	((x,),(y,),(z,),(w,)) = Numeric.matrixmultiply(matrix,[[x],[y],[z],[1.0]])
-	return x,y,z
-
-def transform_point_4d((x,y,z,w), matrix):
-	((x,),(y,),(z,),(w,)) = Numeric.matrixmultiply(matrix,[[x],[y],[z],[w]])
-	return x,y,z,w
+	return transform_point_4d((x,y,z,1.0), matrix)
 
 class CBezier:
 	def __init__(self,pos1,pos2,pos3):

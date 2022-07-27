@@ -2,7 +2,6 @@
 from log import log
 import material, texture, res, light, mesh, camera, actor, vector, shape, css
 from math import pi
-import LinearAlgebra, Numeric
 from OpenGL.GL import *
 import re
 
@@ -137,6 +136,17 @@ class SVGStager(Stager):
 			def is_f():
 				return self.re_d_num.match(d)
 	
+			class my_iter(object):
+				def __init__(self, data):
+					self.data = data
+					self.idx = 0
+				def __nonzero__(self):
+					return self.idx < len(self.data)
+				def next(self):
+					i = self.idx
+					self.idx = i + 1
+					return self.data[i]
+
 			import md5
 			id = md5.new(node.getAttribute('d')).hexdigest()
 			self.hashid = id
@@ -149,7 +159,7 @@ class SVGStager(Stager):
 						c.append(n)
 					methodname = 'handle_' + tag.lower()
 					if hasattr(self,methodname):
-						getattr(self,methodname)(tag,iter(c))
+						getattr(self,methodname)(tag,my_iter(c))
 					else:
 						log('not handling %s' % tag)
 						
@@ -159,11 +169,11 @@ class SVGStager(Stager):
 	
 	def svg_matrix(self, m):	
 		a, b, c, d, e, f = m
-		m = Numeric.array([
+		m = [
 			[a, c, e],
 			[b, d, f],
 			[0.0, 0.0, 1.0],
-		])
+		]
 		#~ m = Numeric.array([
 			#~ [a, b, 0.0],
 			#~ [c, d, 0.0],
@@ -179,12 +189,12 @@ class SVGStager(Stager):
 		m11, m12, m13 = m[0]
 		m21, m22, m23 = m[1]
 		m31, m32, m33 = m[2]
-		return Numeric.array([
+		return [
 			[m11, m21, m31, 0.0],
 			[m12, m22, m32, 0.0],
 			[m13, m23, m33, 0.0],
 			[0.0, 0.0, 0.0, 1.0],
-		])
+		]
 
 	def __init__(self):
 		Stager.__init__(self)
@@ -398,6 +408,7 @@ class SVGStager(Stager):
 			for actor in self.ordered_mesh_actors:
 				actor.render(time)
 
+""" we assume we don't need M3DStager here
 def m3d_matrix(m):	
 	m11, m12, m13, m21, m22, m23, m31, m32, m33, m41, m42, m43 = m
 	#~ m = Numeric.array([
@@ -595,6 +606,7 @@ def test_m3d():
 	document = m3d.parse(res.find('alltest2.3DS'))
 	stager = M3DStager()
 	stager.visit(document)
+"""
 
 def test_svg():
 	import svg, res

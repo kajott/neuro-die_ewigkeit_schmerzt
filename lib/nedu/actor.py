@@ -4,7 +4,6 @@ from OpenGL.GL import *
 from scenes import LIVector, LIBoolean
 import vector
 from math import pi
-import numarray
 
 
 class Actor(object):
@@ -159,8 +158,8 @@ class MeshActor(Actor):
 		glLoadIdentity()
 		self.transform(time)
 		m = glGetDoublev(GL_MODELVIEW_MATRIX)
-		m = numarray.array(m)
-		m.swapaxes(0,1)		
+		m = map(list, m)  # convert from ctypes format into normal nested list
+		m = zip(*m)  # transpose from OpenGL column-major to normal row-major order
 		glMatrixMode(GL_MODELVIEW)
 		glPopMatrix()
 		return m
