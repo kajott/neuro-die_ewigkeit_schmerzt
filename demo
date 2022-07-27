@@ -1,4 +1,3 @@
-export LD_LIBRARY_PATH=.
 export __GL_FSAA_MODE="2"
 export __GL_SYNC_TO_VBLANK="1"
-python demo.py
+python2 demo.py
