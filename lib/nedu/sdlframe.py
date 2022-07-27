@@ -17,7 +17,7 @@ class Frame(glframe.Frame):
 		self.resize_scene(1024,768)      
 		sound.init()
 		sound.sdl.SDL_Init(0x20)
-		flags    = sdl.SDL_OPENGL | sdl.SDL_HWPALETTE | sdl.SDL_FULLSCREEN
+		flags    = sdl.SDL_OPENGL | sdl.SDL_HWPALETTE # | sdl.SDL_FULLSCREEN
 		flags   |= sdl.SDL_RESIZABLE
 		vi = sdl.SDL_GetVideoInfo().contents
 		if vi.hw_available:
