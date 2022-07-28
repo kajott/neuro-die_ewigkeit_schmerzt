@@ -14,11 +14,14 @@ import time
 class Frame(glframe.Frame):
 	def __init__(self,demo,title="nedu",width=glframe.WINDOW_WIDTH,height=glframe.WINDOW_HEIGHT,fullscreen=False,**kargs):
 		glframe.Frame.__init__(self,demo,width,height,**kargs)		
-		self.resize_scene(1024,768)      
+		self.resize_scene(width,height)
 		sound.init()
 		sound.sdl.SDL_Init(0x20)
-		flags    = sdl.SDL_OPENGL | sdl.SDL_HWPALETTE # | sdl.SDL_FULLSCREEN
-		flags   |= sdl.SDL_RESIZABLE
+		flags    = sdl.SDL_OPENGL | sdl.SDL_HWPALETTE
+		if fullscreen:
+			flags |= sdl.SDL_FULLSCREEN
+		else:
+			flags |= sdl.SDL_RESIZABLE
 		vi = sdl.SDL_GetVideoInfo().contents
 		if vi.hw_available:
 			flags |= sdl.SDL_HWSURFACE
@@ -36,7 +39,7 @@ class Frame(glframe.Frame):
 		self.cursor = (0.0,0.0)
 		self.cursor_state = 0
 		self.done = False
-		self.window = sdl.SDL_SetVideoMode(1024, 768, 24, flags)
+		self.window = sdl.SDL_SetVideoMode(width, height, 24, flags)
 		self.init_gl()
 		
 	def run_main_loop(self):
