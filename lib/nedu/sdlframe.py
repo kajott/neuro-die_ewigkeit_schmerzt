@@ -36,6 +36,7 @@ class Frame(glframe.Frame):
 		sdl.SDL_GL_SetAttribute( sdl.SDL_GL_ACCUM_GREEN_SIZE, 0)
 		sdl.SDL_GL_SetAttribute( sdl.SDL_GL_ACCUM_BLUE_SIZE, 0)
 		sdl.SDL_GL_SetAttribute( sdl.SDL_GL_ACCUM_ALPHA_SIZE, 0)
+		sdl.SDL_GL_SetAttribute( sdl.SDL_GL_SWAP_CONTROL, 1)
 		self.cursor = (0.0,0.0)
 		self.cursor_state = 0
 		self.done = False

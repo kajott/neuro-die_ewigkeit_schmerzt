@@ -31,6 +31,7 @@ class Demo:
 			black = (0,0,0,0),
 			blue = (0,0,1,1)
 		))
+		self.override_time = None
 		
 	def close(self):
 		if self.scene and hasattr(self.scene,'close'):
@@ -56,9 +57,15 @@ class Demo:
 		else:
 			r,g,b,a = args
 			self.bgcolor = [float(x) for x in (r,g,b,a)]
-			
+
+	def get_actual_time(self):
+		return self.player.get_beat_time()
+
 	def render(self):
-		self.time = self.player.get_beat_time()
+		if self.override_time is None:
+			self.time = self.get_actual_time()
+		else:
+			self.time = self.override_time
 		glMatrixMode(GL_PROJECTION)
 		glLoadIdentity()
 		glMatrixMode(GL_MODELVIEW)
@@ -73,7 +80,7 @@ class Demo:
 		glClear(GL_DEPTH_BUFFER_BIT)
 		if self.scene:
 			self.scene.render()
-		time.sleep(0.0001)
+		#time.sleep(0.0001)
 	
 	def import_scene(self,scenename,**kargs):
 		if not scenename.startswith('scene_'):

@@ -74,6 +74,8 @@ class Frame(PrintQueue):
 		self.mouse_handlers = []
 		self.console_buffer = ['']
 		self.antialias = kargs.get('antialias', 4)
+		self.shutter = kargs.get('shutter', 180) / 360.0
+		self.prev_frame_time = None
 		
 	def init_gl(self):
 		log('GL_VENDOR:',glGetString(GL_VENDOR))
@@ -197,8 +199,14 @@ class Frame(PrintQueue):
 		glViewport(0,0,*self.window_size)
 		camera.g_aspect_scale = (self.window_size[0] * 3.0) / (self.window_size[1] * 4.0)
 		if self.scene:
+			t1 = self.demo.get_actual_time()
+			t0 = t1 if (self.prev_frame_time is None) else self.prev_frame_time
+			self.prev_frame_time = t1
+			dt = (t1 - t0) * self.shutter / self.antialias
+
 			for subframe in xrange(self.antialias):
 				camera.set_aa_shift(subframe, *self.window_size)
+				self.demo.override_time = t1 - dt * (self.antialias - 1 - subframe)
 
 				# render to FBO
 				self.fbo.bind()
@@ -249,7 +257,9 @@ class Frame(PrintQueue):
 			self.fps = '%.1f' % (self.frames / self.rendertime)
 			self.frames = 0
 			self.rendertime = 0.0
-			
+
+		sleep(0.0001)  # ensure we don't run at infinite FPS
+
 	def toggle_console(self):
 		self.show_console = not self.show_console
 		
