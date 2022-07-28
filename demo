@@ -1,3 +1,2 @@
-export __GL_FSAA_MODE="2"
 export __GL_SYNC_TO_VBLANK="1"
 python2 demo.py $*

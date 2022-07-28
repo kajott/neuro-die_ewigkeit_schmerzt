@@ -27,6 +27,7 @@ def run(*argv):
 	parser.add_option('-y', '--height',type="int",dest="height",help="window/screen height")
 	parser.add_option('-f', '--fullscreen',dest="fullscreen",action="store_true",help="use full screen")
 	parser.add_option('-w', '--windowed',dest="fullscreen",action="store_false",help="use window")
+	parser.add_option('-a', '--antialias',type="int",dest="antialias",help="number of anti-aliasing samples (default: 4)")
 	parser.add_option('-m', '--music',dest="trackname",help="basename of alternative ogg track (must be in res directory and named like <name>-<bpm>.ogg)")
 	parser.add_option('-p', '--frame',dest="frame",help="which frame to use (glut/gtk), default is glut")
 	parser.add_option('-s', '--scene',dest="scenename",help="basename of start scene")

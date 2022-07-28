@@ -7,6 +7,8 @@ import os
 from OpenGL.GL import 	glViewport, \
 						glLoadIdentity, \
 						glColor3f, \
+						glColor4f, \
+						glEnable, glDisable, \
 						glGetString, \
 						GL_EXTENSIONS, \
 						glMatrixMode, \
@@ -14,7 +16,12 @@ from OpenGL.GL import 	glViewport, \
 						GL_MODELVIEW, \
 						GL_VENDOR, \
 						GL_RENDERER, \
-						GL_VERSION
+						GL_VERSION, \
+						GL_TEXTURE_2D, \
+						GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, \
+						glBlendFunc, \
+						GL_RGBA, GL_RGBA8, GL_UNSIGNED_BYTE, \
+						glBegin, GL_QUADS, glEnd, glVertex2d, glTexCoord2d
 
 from log import log
 
@@ -66,6 +73,7 @@ class Frame(PrintQueue):
 		self.key_handlers = []
 		self.mouse_handlers = []
 		self.console_buffer = ['']
+		self.antialias = kargs.get('antialias', 4)
 		
 	def init_gl(self):
 		log('GL_VENDOR:',glGetString(GL_VENDOR))
@@ -141,14 +149,22 @@ class Frame(PrintQueue):
 		self.run_main_loop()
 		self.console.end_interact()
 			
-	def resize_scene(self, Width, Height):		
+	def resize_scene(self, Width, Height):
 		if Height == 0:
 			Height = 1
 		
 		Width,Height = self.fix_window_size(Width,Height)
 		self.window_size = Width,Height
-		self.aspect = float(Width)/float(Height)				
-		
+		self.aspect = float(Width)/float(Height)
+
+		if GLEXT.gl_extensions:
+			self.fbo = texture.Framebuffer()
+			self.fbo_tex = texture.Texture(Width, Height, internalformat=GL_RGBA8, format=GL_RGBA, pdtype=GL_UNSIGNED_BYTE, levels=1, noipol=True)
+			self.rbo = texture.DepthRenderbuffer(Width, Height)
+			self.fbo.attach_renderbuffer(self.rbo)
+			self.fbo.attach_texture(self.fbo_tex)
+			self.fbo.check()
+
 	def draw_fps(self):
 		texture.reset()
 		glMatrixMode(GL_PROJECTION)
@@ -181,15 +197,43 @@ class Frame(PrintQueue):
 		glViewport(0,0,*self.window_size)
 		camera.g_aspect_scale = (self.window_size[0] * 3.0) / (self.window_size[1] * 4.0)
 		if self.scene:
-			if self.debug:
-				try:
+			for subframe in xrange(self.antialias):
+				camera.set_aa_shift(subframe, *self.window_size)
+
+				# render to FBO
+				self.fbo.bind()
+
+				if self.debug:
+					try:
+						self.scene.render()
+					except:
+						import traceback
+						traceback.print_exc()
+						raise SystemExit
+				else:
 					self.scene.render()
-				except:
-					import traceback
-					traceback.print_exc()
-					raise SystemExit
-			else:
-				self.scene.render()
+
+				# render FBO to screen
+				texture.unbind_framebuffer()
+				GLSL.use_fixed()
+				glMatrixMode(GL_PROJECTION)
+				glLoadIdentity()
+				glMatrixMode(GL_MODELVIEW)
+				glLoadIdentity()
+				self.fbo_tex.bind()
+				glEnable(GL_TEXTURE_2D)
+				if subframe:
+					glEnable(GL_BLEND)
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+				else:
+					glDisable(GL_BLEND)
+				glColor4f(1.0,1.0,1.0, 1.0 / (subframe + 1))
+				glBegin(GL_QUADS)
+				glTexCoord2d(0,0); glVertex2d(-1,-1)
+				glTexCoord2d(1,0); glVertex2d(+1,-1)
+				glTexCoord2d(1,1); glVertex2d(+1,+1)
+				glTexCoord2d(0,1); glVertex2d(-1,+1)
+				glEnd()
 
 		if self.show_console:
 			self.draw_console()

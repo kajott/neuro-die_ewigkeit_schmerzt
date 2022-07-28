@@ -11,6 +11,19 @@ from scenes import LIVector
 # monster by doing this. To my defense, I just don't want to go pass the
 # required parameters through all layers of this 16-year old software, mkay?
 g_aspect_scale = 1.0
+g_shift_x, g_shift_y = 0.0, 0.0
+
+def set_aa_shift(subframe, window_width, window_height):
+	global g_shift_x, g_shift_y
+	scalex = 1.0 / window_width
+	scaley = 1.0 / window_height
+	g_shift_x = g_shift_y = 0.0
+	while subframe:
+		g_shift_x += scalex * (subframe & 1)
+		g_shift_y += scaley * ((subframe ^ (subframe >> 1)) & 1)
+		subframe = subframe >> 2
+		scalex *= 0.5
+		scaley *= 0.5
 
 class Camera2D(actor.Actor):
 	def __init__(self):
@@ -25,7 +38,7 @@ class Camera2D(actor.Actor):
 		x,y,z = self._position[time]
 		px,py = w2, -h2
 
-		glTranslated(-1.0,1.0,0.0)
+		glTranslated(g_shift_x-1.0,g_shift_y+1.0,0.0)
 		glScaled(1.0/w2,1.0/h2,1.0)
 		glTranslated(px,py,0.0)
 		glRotated(*self._rotation[time])
