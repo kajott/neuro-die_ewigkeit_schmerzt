@@ -77,7 +77,7 @@ class Frame(PrintQueue):
 		GLSL.init()
 		mesh.init()
 		texture.init()
-		self.font = font.font_data (res.find("console.ttf"), CONSOLE_FONTSIZE)
+		self.font = None # font.font_data (res.find("console.ttf"), CONSOLE_FONTSIZE)
 		self.resize_scene(*self.window_size)
 
 	def add_key_handler(self, func):
