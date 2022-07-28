@@ -23,6 +23,7 @@ import GLSL
 import mesh
 import texture
 import res
+import camera
 
 # for console
 ###################
@@ -178,6 +179,7 @@ class Frame(PrintQueue):
 		t = time()
 		self.console.interact_step()
 		glViewport(0,0,*self.window_size)
+		camera.g_aspect_scale = (self.window_size[0] * 3.0) / (self.window_size[1] * 4.0)
 		if self.scene:
 			if self.debug:
 				try:

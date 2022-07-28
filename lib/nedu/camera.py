@@ -6,6 +6,12 @@ import vector
 from vector import logmod
 from scenes import LIVector
 
+# Global variables for camera fine tuning.
+# Yes, I know, one doesn't do that. I fully acknowledge that I'm a terrible
+# monster by doing this. To my defense, I just don't want to go pass the
+# required parameters through all layers of this 16-year old software, mkay?
+g_aspect_scale = 1.0
+
 class Camera2D(actor.Actor):
 	def __init__(self):
 		actor.Actor.__init__(self)		
@@ -15,10 +21,10 @@ class Camera2D(actor.Actor):
 		glLoadIdentity()
 		w,h,d = self._scale[time]
 		
-		w2,h2 = w*0.5,h*0.5
+		w2,h2 = w*0.5*g_aspect_scale,h*0.5
 		x,y,z = self._position[time]
 		px,py = w2, -h2
-		
+
 		glTranslated(-1.0,1.0,0.0)
 		glScaled(1.0/w2,1.0/h2,1.0)
 		glTranslated(px,py,0.0)
