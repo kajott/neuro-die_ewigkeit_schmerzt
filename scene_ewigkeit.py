@@ -129,5 +129,3 @@ class Scene(BaseScene):
 		self.program.use()
 		self.program.time(self.growscale[self.time])
 		self.actors.render(self.time)
-		import time
-		time.sleep(0.01)

@@ -80,7 +80,6 @@ class Demo:
 		glClear(GL_DEPTH_BUFFER_BIT)
 		if self.scene:
 			self.scene.render()
-		#time.sleep(0.0001)
 	
 	def import_scene(self,scenename,**kargs):
 		if not scenename.startswith('scene_'):

@@ -39,7 +39,7 @@ import font
 
 # for event calculation
 ###########################
-from time import time,sleep
+from time import time
 
 CONSOLE_FONTSIZE = 10
 	
@@ -257,8 +257,6 @@ class Frame(PrintQueue):
 			self.fps = '%.1f' % (self.frames / self.rendertime)
 			self.frames = 0
 			self.rendertime = 0.0
-
-		sleep(0.0001)  # ensure we don't run at infinite FPS
 
 	def toggle_console(self):
 		self.show_console = not self.show_console

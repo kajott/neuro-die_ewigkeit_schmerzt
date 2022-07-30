@@ -160,5 +160,3 @@ class Scene(BaseScene):
 		self.grow7.render(self.time)
 		self.grow8.render(self.time)
 		self.grow9.render(self.time)
-		import time
-		time.sleep(0.001)

@@ -53,7 +53,6 @@ class Frame(glframe.Frame):
 				elif event.type == 2: #sdl.SDL_KEYDOWN:
 					self.done = True
 			self.draw_scene()
-			time.sleep(0.001)	
 		print 'done.'
 		self.exit_frame()
 		
