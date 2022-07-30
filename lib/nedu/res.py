@@ -8,6 +8,9 @@ def is_frozen():
 			or imp.is_frozen("__main__")) # tools/freeze
 
 def get_root_folder_path():
+	# [KeyJ] well, let's make things a little simpler than they used to be ...
+	return os.path.dirname(os.path.dirname(os.path.normpath(os.path.abspath(__file__))))
+	print(__file__)
 	if is_frozen():
 		return os.path.dirname(sys.executable)
 	return os.path.normpath(os.path.join(os.path.dirname(__file__)))
@@ -21,6 +24,11 @@ class FileNotFoundError(AssertionError):
 def set_cachepath(path):
 	global _cachepath
 	log('setting cachepath to "%s"' % path)
+	if not os.path.isdir(path):
+		try:
+			os.mkdir(path)
+		except EnvironmentError:
+			pass
 	_cachepath = path
 
 def add_scene_path(path):
@@ -34,7 +42,9 @@ def add_scene_path(path):
 	
 def add_res_path(path):
 	path = os.path.normpath(path)
-	assert os.path.isdir(path), "'%s' is not a directory" % path
+	if not os.path.isdir(path):
+		log("'%s' is not a directory" % path)
+		return
 	if not path in _searchpaths:
 		log("adding resource path '%s'" % path)
 		_searchpaths.append(path)

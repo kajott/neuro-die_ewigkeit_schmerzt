@@ -12,7 +12,7 @@ import _ctypes
 from ctypes import 	c_uint, \
 					c_int, \
 					c_float, \
-					CFUNCTYPE, \
+					CFUNCTYPE, WINFUNCTYPE, \
 					c_char_p, \
 					c_void_p, \
 					POINTER, \

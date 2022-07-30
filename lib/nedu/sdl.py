@@ -251,7 +251,7 @@ SDL_GL_MULTISAMPLESAMPLES = 14
 SDL_GL_ACCELERATED_VISUAL = 15
 SDL_GL_SWAP_CONTROL = 16
 
-libSDL = CDLL(ctypes.util.find_library("SDL-1.2"))
+libSDL = CDLL(ctypes.util.find_library("SDL-1.2") or "SDL.dll")
 SDL_VideoInit = libSDL.SDL_VideoInit
 SDL_VideoInit.restype = c_int
 SDL_VideoInit.argtypes = [c_char_p,Uint32]

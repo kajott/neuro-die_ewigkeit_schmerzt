@@ -18,8 +18,8 @@ def init():
 	if sdl:
 		return
 	
-	sdl = library.load('SDL','SDL-1.2')
-	sdl_mixer = library.load('SDL_mixer','SDL_mixer-1.2')
+	sdl = library.load('SDL-1.2','SDL')
+	sdl_mixer = library.load('SDL_mixer-1.2','SDL_mixer')
 
 mixmusic_callback_type = CFUNCTYPE(None, c_void_p, c_void_p, c_int)
 

@@ -32,10 +32,14 @@ def load(*names):
 	@rtype: ctypes CDLL handle
 	@rparam: a handle to the loaded library.
 	"""
-	import ctypes, ctypes.util
+	import ctypes, ctypes.util, sys, os
 	m = None
 	for name in names:
+		if sys.platform == "win32":
+			name += ".dll"
 		path = ctypes.util.find_library(name)
+		if not(path) and os.path.isfile(name):
+			path = name
 		if path:
 			m = ctypes.CDLL(path)
 			break
