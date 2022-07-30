@@ -288,6 +288,11 @@ SDL_UpdateRects = libSDL.SDL_UpdateRects
 SDL_UpdateRects.restype = None
 SDL_UpdateRects.argtypes = [POINTER(SDL_Surface),c_int,POINTER(SDL_Rect)]
 
+SDL_ShowCursor = libSDL.SDL_ShowCursor
+SDL_ShowCursor.restype = c_int
+SDL_ShowCursor.argtypes = [c_int]
+
+
 int32_t = c_int
 
 Sint32 = int32_t

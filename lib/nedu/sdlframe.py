@@ -42,7 +42,9 @@ class Frame(glframe.Frame):
 		self.done = False
 		self.window = sdl.SDL_SetVideoMode(width, height, 24, flags)
 		self.init_gl()
-		
+		if fullscreen:
+			sdl.SDL_ShowCursor(0)
+
 	def run_main_loop(self):
 		while not self.done:
 			#SDL_WarpMouse(2048,2048); // kludge to get that freaking mouse cursor gone (no it _IS_ off.)
