@@ -7,6 +7,8 @@ paniq
 additional gfx
 tournesol
 
+2022 update and new windows port by KeyJ / TRBL
+
 this demo is coded entirely in python, and the entire source
 code is included. it features a quite complete svg loader,
 and ctypes-based abstractions for sdl and glsl.
@@ -15,6 +17,14 @@ the first time running it will take some time because
 it needs to render polygons and outlines from the shapes
 first. all data is cached, so the second time you run it
 it will load quite fast.
+
+new features in the 2022 update:
+- Python 2.7 and 64-bit compatibility
+- support for wider aspect ratios
+- spatio-temporal antialiasing, similar to Masagin's
+- working parameter parser
+- demo auto-quits itself when it's done
+- hidden mouse cursor
 
 gpl licence.
 
