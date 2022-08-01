@@ -73,7 +73,7 @@ class Frame(PrintQueue):
 		self.key_handlers = []
 		self.mouse_handlers = []
 		self.console_buffer = ['']
-		self.antialias = kargs.get('antialias', 4)
+		self.antialias = max(1, kargs.get('antialias', 4))
 		self.shutter = kargs.get('shutter', 180) / 360.0
 		self.prev_frame_time = None
 		

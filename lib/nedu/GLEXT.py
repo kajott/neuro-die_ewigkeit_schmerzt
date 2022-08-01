@@ -31,7 +31,6 @@ if is_win32():
 	#ogl = cdll.LoadLibrary('opengl32')	
 	ogl = ctypes.windll.opengl32
 else:
-	import glob
 	ogl = ctypes.cdll.LoadLibrary(ctypes.util.find_library("GL"))
 
 _verbose = False
@@ -147,6 +146,7 @@ glTexCoordPointerARB = ogl.glTexCoordPointer
 glNormalPointerARB = ogl.glNormalPointer
 glGetError = ogl.glGetError
 glTexImage2DEXT = ogl.glTexImage2D
+glTexImage2DEXT.argtypes = (c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_uint, c_void_p)
 
 #~ GLAPI GLboolean APIENTRY glIsBufferARB (GLuint);
 #~ GLAPI void APIENTRY glBufferDataARB (GLenum, GLsizeiptrARB, const GLvoid *, GLenum);

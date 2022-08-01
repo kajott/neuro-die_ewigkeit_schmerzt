@@ -10,7 +10,6 @@ def is_frozen():
 def get_root_folder_path():
 	# [KeyJ] well, let's make things a little simpler than they used to be ...
 	return os.path.dirname(os.path.dirname(os.path.normpath(os.path.abspath(__file__))))
-	print(__file__)
 	if is_frozen():
 		return os.path.dirname(sys.executable)
 	return os.path.normpath(os.path.join(os.path.dirname(__file__)))
