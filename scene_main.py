@@ -6,6 +6,7 @@
 
 from nedu import mesh, res, m3d, stager, camera, svg, demo, GLSL, keybind, vector
 from nedu.demo import Scene as BaseScene
+from nedu.demo import EndOfDemo
 from nedu.actor import MeshActor
 from copy import deepcopy
 
@@ -33,6 +34,7 @@ class Scene(BaseScene):
 		self.scenes[252.0] = scene_ewigkeit.Scene(demo)
 		self.scenes[416.0] = scene_symbols.Scene(demo)
 		self.scenes[512.0] = scene_scroller.Scene(demo)
+		self.scenes[580.0] = EndOfDemo(demo)
 		
 	def render(self):
 		scene = self.scenes[self.time]

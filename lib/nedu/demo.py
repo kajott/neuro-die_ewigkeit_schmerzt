@@ -150,6 +150,10 @@ class Scene(object):
 			
 	time = property(get_time, set_time)
 
+class EndOfDemo(Scene):
+	def render(self):
+		self.demo.frame.done = True
+
 if __name__ == "__main__":
 	demo = Demo()
 	demo.run(silent=True)
