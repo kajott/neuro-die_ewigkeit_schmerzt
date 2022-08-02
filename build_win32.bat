@@ -27,3 +27,7 @@ copy /b res\shaders\* dist\demo\res\shaders\
 copy special\*.bat dist\
 copy special\*.sh dist\
 copy README dist\README.txt
+
+cd dist
+zip -rv9 ..\neuro-die_ewigkeit_schmerzt-2022update.zip .
+cd ..

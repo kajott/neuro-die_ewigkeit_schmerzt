@@ -3,3 +3,4 @@ cache/
 build/
 dist/
 demo.spec
+neuro-*.zip
