@@ -148,7 +148,7 @@ class Path:
 			# if true, edge is an outline
 			pass
 		def vertex(v):
-			assert v
+			#assert v  # this assert tends to make trouble with some Python/PyOpenGL version combinations, so disable it
 			vc = vector.scale(vector.diff(v[:2],vcenter),vscale)
 			if self.strokeuvmap:
 				#print '->',tv, v

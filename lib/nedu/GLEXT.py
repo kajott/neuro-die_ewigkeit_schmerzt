@@ -12,7 +12,7 @@ import _ctypes
 from ctypes import 	c_uint, \
 					c_int, \
 					c_float, \
-					CFUNCTYPE, WINFUNCTYPE, \
+					CFUNCTYPE, \
 					c_char_p, \
 					c_void_p, \
 					POINTER, \
@@ -28,7 +28,7 @@ def is_win32():
 	return sys.platform == 'win32'
 
 if is_win32():
-	#ogl = cdll.LoadLibrary('opengl32')	
+	from ctypes import WINFUNCTYPE
 	ogl = ctypes.windll.opengl32
 else:
 	ogl = ctypes.cdll.LoadLibrary(ctypes.util.find_library("GL"))

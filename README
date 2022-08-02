@@ -26,6 +26,14 @@ new features in the 2022 update:
 - demo auto-quits itself when it's done
 - hidden mouse cursor
 
+to run on Linux, the following libraries are needed:
+- Python 2.7 itself
+- PyOpenGL, either via package manager (typical name
+  is "python-opengl") or via PyPI ("python2 -m pip
+  install PyOpenGL"; install "python-pip" or similar
+  first to get PIP)
+- SDL 1.2 and SDL_mixer (Debian/Ubuntu: libsdl-mixer1.2)
+
 gpl licence.
 
 enjoy.
