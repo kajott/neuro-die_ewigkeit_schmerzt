@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 
 # for gl drawing commands
@@ -21,7 +22,8 @@ from OpenGL.GL import 	glViewport, \
 						GL_BLEND, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, \
 						glBlendFunc, \
 						GL_RGBA, GL_RGBA8, GL_UNSIGNED_BYTE, \
-						glBegin, GL_QUADS, glEnd, glVertex2d, glTexCoord2d
+						glBegin, GL_QUADS, glEnd, glVertex2d, glTexCoord2d, \
+						glReadPixels
 
 from log import log
 
@@ -57,7 +59,7 @@ class TimeSource:
 		return time() - self.time
 		
 class Frame(PrintQueue):
-	def __init__(self,demo,width,height,debug=False,**kargs):
+	def __init__(self,demo,width,height,debug=False,encode=False,fps=0,**kargs):
 		PrintQueue.__init__(self)
 		self.debug = debug
 		self.demo = demo
@@ -75,6 +77,24 @@ class Frame(PrintQueue):
 		self.console_buffer = ['']
 		self.antialias = max(1, kargs.get('antialias', 4))
 		self.shutter = kargs.get('shutter', 180) / 360.0
+		if encode and fps:
+			self.encoder = subprocess.Popen(["ffmpeg", "-y",
+				"-loglevel", "warning",
+				"-f", "rawvideo",
+				"-pix_fmt", "rgba",
+				"-r", str(fps),
+				"-s", str(width) + "x" + str(height),
+				"-i", "-",
+				"-i", "res/ba-135.ogg",
+				"-vf", "format=yuv420p,vflip",
+				"-c:v", "libx264", "-profile:v", "high",
+				"-preset:v", "fast", "-crf:v", "18",
+				"-tune:v", "animation",
+				"-c:a", "copy",
+				encode],
+				stdin=subprocess.PIPE)
+		else:
+			self.encoder = None
 		self.prev_frame_time = None
 		
 	def init_gl(self):
@@ -248,6 +268,9 @@ class Frame(PrintQueue):
 		if self.show_fps:
 			self.draw_fps()
 
+		if self.encoder:
+			self.encoder.stdin.write(glReadPixels(0, 0, self.window_size[0], self.window_size[1], GL_RGBA, GL_UNSIGNED_BYTE))
+
 		#  since this is double buffered, swap the buffers to display what just got drawn. 
 		self.swap_buffers()
 		
@@ -268,6 +291,9 @@ class Frame(PrintQueue):
 	def exit_frame(self):
 		if self.scene:
 			self.scene.close()
+		if self.encoder:
+			self.encoder.stdin.close()
+			self.encoder.wait()
 	
 	def console_char(self,char):
 		self.console.push_char(char)

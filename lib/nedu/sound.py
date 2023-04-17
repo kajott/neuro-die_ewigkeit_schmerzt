@@ -32,6 +32,7 @@ class VirtualTimingSource(object):
 	offset = 0
 
 	def __init__(self, track, bpm, time_inc):
+		self.track = track
 		self.bpm = bpm
 		self.t = 0.0
 		self.dt = time_inc
@@ -207,7 +208,7 @@ def create_player(trackname="demo",bpm=None,silent=False,sps=44100,fps=0,**kargs
 		log("track '%s' not found" % trackname)
 	if fps:
 		log("simulating constant %g fps at %ibpm" % (fps, bpm))
-		return VirtualTimingSource('', bpm, 1.0 / fps)
+		return VirtualTimingSource(res.find(filename), bpm, 1.0 / fps)
 	elif silent:
 		log("playing silent at %ibpm" % bpm)
 		return SilentSoundPlayer('',bpm)

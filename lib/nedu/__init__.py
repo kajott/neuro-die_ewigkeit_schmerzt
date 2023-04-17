@@ -35,7 +35,8 @@ def run(*argv):
 	parser.add_option('-b', '--bpm',type="int",dest="bpm",help="default speed of music")
 	parser.add_option('-t', '--time',type="int",dest="time",help="start time index")
 	parser.add_option('-r', '--sps',type="int",dest="sps",help="samples per second")
-	parser.add_option('--fps',dest="fps",type=float,help="run at fixed frame rate (without sound)")
+	parser.add_option('--fps',type=float,help="run at fixed frame rate (without sound)")
+	parser.add_option('--encode',help="use FFmpeg to encode video into specified file; requires --fps to make sense")
 	
 	import sys, os
 
