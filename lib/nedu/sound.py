@@ -28,6 +28,38 @@ import sys
 
 import res
 
+class VirtualTimingSource(object):
+	offset = 0
+
+	def __init__(self, track, bpm, time_inc):
+		self.bpm = bpm
+		self.t = 0.0
+		self.dt = time_inc
+
+	def run(self):
+		self.t = 0.0
+
+	def set_beat_time(self, t):
+		self.t = ((t + self.offset) / self.bpm) * 60.0
+	def get_beat_time(self):
+		return ((self.t / 60.0) * self.bpm) - self.offset
+
+	def get_pause(self):
+		return False
+	def set_pause(self, dummy):
+		pass
+	def is_playing(self):
+		return True
+
+	def deinit(self):
+		pass
+
+	def next_frame(self):
+		self.t += self.dt
+
+	beattime = property(get_beat_time,set_beat_time)
+	pause = property(get_pause,set_pause)
+
 class SilentSoundPlayer(object):
 	def __init__(self,track,bpm):
 		self.bpm = bpm
@@ -68,6 +100,9 @@ class SilentSoundPlayer(object):
 	def deinit(self):
 		pass
 		
+	def next_frame(self):
+		pass
+
 	beattime = property(get_beat_time,set_beat_time)
 	pause = property(get_pause,set_pause)
 
@@ -151,10 +186,13 @@ class SoundPlayer(object):
 	def is_playing(self):
 		return True
 
+	def next_frame(self):
+		pass
+
 	beattime = property(get_beat_time,set_beat_time)
 	pause = property(get_pause,set_pause)
 
-def create_player(trackname="demo",bpm=None,silent=False,sps=44100,**kargs):
+def create_player(trackname="demo",bpm=None,silent=False,sps=44100,fps=0,**kargs):
 	basename = ''
 	for filename in res.listdir(''):
 		if os.path.splitext(filename)[1] in ('.ogg','.mp3','.wav') and filename.startswith(trackname):
@@ -167,7 +205,10 @@ def create_player(trackname="demo",bpm=None,silent=False,sps=44100,**kargs):
 	if not basename:
 		silent = True
 		log("track '%s' not found" % trackname)
-	if silent:
+	if fps:
+		log("simulating constant %g fps at %ibpm" % (fps, bpm))
+		return VirtualTimingSource('', bpm, 1.0 / fps)
+	elif silent:
 		log("playing silent at %ibpm" % bpm)
 		return SilentSoundPlayer('',bpm)
 	else:

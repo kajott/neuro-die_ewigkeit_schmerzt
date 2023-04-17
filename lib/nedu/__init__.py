@@ -34,7 +34,8 @@ def run(*argv):
 	parser.add_option('-s', '--scene',dest="scenename",help="basename of start scene")
 	parser.add_option('-b', '--bpm',type="int",dest="bpm",help="default speed of music")
 	parser.add_option('-t', '--time',type="int",dest="time",help="start time index")
-	parser.add_option('-r', '--sps',type="int",dest="sps",help="samples per seconds")
+	parser.add_option('-r', '--sps',type="int",dest="sps",help="samples per second")
+	parser.add_option('--fps',dest="fps",type=float,help="run at fixed frame rate (without sound)")
 	
 	import sys, os
 

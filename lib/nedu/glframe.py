@@ -257,6 +257,7 @@ class Frame(PrintQueue):
 			self.fps = '%.1f' % (self.frames / self.rendertime)
 			self.frames = 0
 			self.rendertime = 0.0
+		self.demo.player.next_frame()
 
 	def toggle_console(self):
 		self.show_console = not self.show_console
